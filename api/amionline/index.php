@@ -1,6 +1,11 @@
 <?php
-$servername = "localhost";
-$username = "root";
+// 设置默认时区
+date_default_timezone_set('Asia/Shanghai');
+
+$servername = "proivan-mssql.mysql.database.azure.com";
+$username = "yujionako";
+//$servername = "localhost";
+//$username = "root";
 $password = "Ldc123456";
 $dbname = "AmIOnline";
 
@@ -21,11 +26,20 @@ $devices = [];
 
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        $device_id = $row['device_id'];
-        $last_update = strtotime($row['last_update']); // 将数据库中的时间转换为时间戳
-
+        // 从数据库获取的 UTC 时间
+        $last_update = $row['last_update'];
+        
+        // 创建 DateTime 对象并设置为 UTC
+        $date = new DateTime($last_update, new DateTimeZone('UTC'));
+        
+        // 将时间转换为服务器的当地时区
+        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        
+        // 获取转换后的时间戳
+        $last_update_timestamp = $date->getTimestamp();
+        
         // 计算时间差（以秒为单位）
-        $time_diff = $current_time - $last_update;
+        $time_diff = $current_time - $last_update_timestamp;
 
         // 如果时间差大于3分钟（180秒），则更新状态为offline
         if ($time_diff > 20) {
@@ -154,7 +168,7 @@ if ($result->num_rows > 0) {
                     </td>
                     <td><?php echo htmlspecialchars($device['cpu_usage']); ?></td>
                     <td><?php echo htmlspecialchars($device['ram_usage']); ?></td>
-                    <td><?php echo htmlspecialchars(substr($device['last_update'], 2)); ?></td>
+                    <td><?php echo htmlspecialchars(DateTime::createFromFormat('y-m-d H:i:s', substr($device['last_update'], 2), new DateTimeZone('UTC'))->setTimezone(new DateTimeZone(date_default_timezone_get()))->format('y-m-d H:i:s')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

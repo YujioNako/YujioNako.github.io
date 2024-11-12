@@ -1,6 +1,9 @@
 <?php
-$servername = "localhost";
-$username = "root";
+// 设置默认时区
+date_default_timezone_set('Asia/Shanghai');
+
+$servername = "proivan-mssql.mysql.database.azure.com";
+$username = "yujionako";
 $password = "Ldc123456";
 $dbname = "AmIOnline";
 

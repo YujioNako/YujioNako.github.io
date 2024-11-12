@@ -81,7 +81,7 @@
         var EQUAL_STEP = true;
         var map = L.map('map').setView([0, 0], 2);
         var tileLayer = L.tileLayer('https://tiles.pro-ivan.cn/{x}/{y}/{z}/22', {
-            attribution: '&copy; <a href="https://tiles.pro-ivan.cn/">Pro-Ivan Tiles Integration</a> contributors'
+            attribution: '&copy; <a href="https://tile.pro-ivan.cn/">Pro-Ivan Tiles Integration</a> contributors'
         }).addTo(map);
 
         // 切换瓦片图源的函数
@@ -94,7 +94,7 @@
 
             // 创建新的瓦片图层并添加到地图中
             tileLayer = L.tileLayer(tileSource, {
-                attribution: '&copy; <a href="https://tiles.pro-ivan.cn/">Pro-Ivan Tiles Integration</a> contributors'
+                attribution: '&copy; <a href="https://tile.pro-ivan.cn/">Pro-Ivan Tiles Integration</a> contributors'
             }).addTo(map);
         }
 

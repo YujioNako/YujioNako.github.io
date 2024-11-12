@@ -3,6 +3,7 @@
  * 注：区分大小写
  * by: http://www.daixiaorui.com
  */
+error_reporting(0);
 if(!empty($_POST['key'])){
     if(intval($_POST['key']) == 0){
         $key = str_replace('uid:','',$_POST['key']);

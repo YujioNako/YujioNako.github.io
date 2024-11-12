@@ -65,7 +65,7 @@ session_start();
     </script>
     <br>
     <button class="mdui-btn mdui-color-theme mdui-text-color-white-text" type="button" onclick="document.getElementById('submit_btn').click();"  style="margin-right:24px;float:right;">提交</button>
-    <button class="mdui-btn mdui-color-theme mdui-text-color-white-text" type="button" onclick="document.getElementById('captchaImg').src='./captcha.php';"  style="margin-right:24px;float:right;">刷新</button>
+    <button class="mdui-btn mdui-color-theme mdui-text-color-white-text" type="button" onclick="document.getElementById('captchaImg').src='';document.getElementById('captchaImg').src='./captcha.php';"  style="margin-right:24px;float:right;">刷新</button>
 </body>
 </html>
 <!--

@@ -101,12 +101,13 @@ if (empty($gain) || empty($title)) {
         fclose($file);
 
         // 连接数据库
-        $servername = "127.0.0.1";
-        $username = "root";
+        $servername = "proivan-mssql.mysql.database.azure.com";
+        $username = "yujionako";
         $password = "Ldc123456";
         $dbname = "messages";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
+        mysqli_set_charset($conn, "utf8");
 
         // 检查连接是否成功
         if ($conn->connect_error) {

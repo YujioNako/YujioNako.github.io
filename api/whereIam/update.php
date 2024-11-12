@@ -1,6 +1,6 @@
 <?php
-$servername = "localhost";
-$username = "root";
+$servername = "proivan-mssql.mysql.database.azure.com";
+$username = "yujionako";
 $password = "Ldc123456";
 $dbname = "whereIam";
 

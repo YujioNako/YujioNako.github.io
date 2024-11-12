@@ -11,34 +11,6 @@ if (!isset($_SESSION['visited'])) {
 
 ?>
 
-<?php
-function compressIfNeeded($sourceFile, $compressedFile) {
-    if (!file_exists($sourceFile)) {
-        throw new Exception("Source file does not exist: $sourceFile");
-    }
-
-    $sourceModifiedTime = filemtime($sourceFile);
-    $compressedModifiedTime = file_exists($compressedFile) ? filemtime($compressedFile) : 0;
-
-    if ($sourceModifiedTime > $compressedModifiedTime) {
-        // 压缩内容
-        $content = file_get_contents($sourceFile);
-        $compressedContent = gzcompress($content);
-        file_put_contents($compressedFile, $compressedContent);
-        echo "<script>let update = true;</script>";
-    } else {
-        echo "<script>let update = false;</script>";
-    }
-}
-
-// 调用函数进行检查和压缩
-try {
-    compressIfNeeded('data/img_content.html', 'data/img_content_compressed.gz');
-} catch (Exception $e) {
-    echo 'Error: ',  $e->getMessage(), "\n";
-}
-?>
-
 <!doctype html>
 <html lang="zh-cmn-Hans">
 	<head>
@@ -50,10 +22,36 @@ try {
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<script type="text/javascript" src="/passport/passcheck.php"></script>
 		<link rel="shortcut icon" href="/favicon.ico">
+    	<script src="/mdui/js/mdui.min.js"></script>
 		<link rel="stylesheet" href="/mdui/css/mdui.css" />
 		<link rel="stylesheet" href="/new-js/index.css">
-    	<script src="/mdui/js/mdui.min.js"></script>
-    	<script src="/new-js/index.js"></script>
+        <?php
+        function compressIfNeeded($sourceFile, $compressedFile) {
+            if (!file_exists($sourceFile)) {
+                throw new Exception("Source file does not exist: $sourceFile");
+            }
+        
+            $sourceModifiedTime = filemtime($sourceFile);
+            $compressedModifiedTime = file_exists($compressedFile) ? filemtime($compressedFile) : 0;
+        
+            if ($sourceModifiedTime > $compressedModifiedTime) {
+                // 压缩内容
+                $content = file_get_contents($sourceFile);
+                $compressedContent = gzcompress($content);
+                file_put_contents($compressedFile, $compressedContent);
+                echo "<script>let update = true;</script>";
+            } else {
+                echo "<script>let update = false;</script>";
+            }
+        }
+        
+        // 调用函数进行检查和压缩
+        try {
+            compressIfNeeded('data/img_content.html', 'data/img_content_compressed.gz');
+        } catch (Exception $e) {
+            echo 'Error: ',  $e->getMessage(), "\n";
+        }
+        ?>
 		<style>
             .bottom { position: fixed; bottom: -700px; right: -800px; align:center;pointer-events: auto;z-index:2000;}
             .lazy { margin-top: 120px; margin-bottom: 120px; width: 100%; }
@@ -68,7 +66,7 @@ try {
                 width: 18%;
             }
             
-            #overlay {
+            #overlay,#loading_l {
               position: fixed;
               top: 0;
               left: 0;
@@ -81,6 +79,8 @@ try {
               z-index: 9999;
               transition: all 0.5s ease-in-out;
             }
+            
+            #loading_l {display: block; background-color: rgba(0, 0, 0, 0.6);}
             
             #prevBtn, #nextBtn {
                 position: absolute;
@@ -257,13 +257,13 @@ try {
 		<div class="mdui-dialog" id="support">
 			<div class="mdui-dialog-title">支持我们</div>
 			<div class="mdui-dialog-content">
-				如果您有能力，还请多多支持我们！
+                如果您有能力，还请多多支持我们！
 				<br>
 				<img src="/sponsor/weixin.webp" class="support-img" width="48%" />
 				<img src="/sponsor/alipay.webp" class="support-img" width="48%" style="margin-left:2%;"/>
 			</div>
 			<div class="mdui-dialog-actions">
-				<button class="mdui-btn mdui-ripple mdui-text-color-theme mdui-text-color-white" mdui-dialog-close>关闭</button>
+				<button class="mdui-btn mdui-ripple mdui-text-color-theme mdui-text-color-white" mdui-dialog-close >关闭</button>
 			</div>
 		</div>
 		<div class="mdui-appbar">
@@ -308,9 +308,9 @@ try {
             <canvas></canvas>
         </div>
 	<footer><div id="footer"></div></footer>
+	<script src="/new-js/index.js"></script>
 	</body>
     <script src="./mdui/js/mdui.min.js"></script>
-    <script src="./new-js/index.js"></script>
 	<script src="./live2d/pixi/pixi.min.js"></script>
     <script src="./live2d/core/live2dcubismcore.min.js"></script>
     <script src="./live2d/framework/live2dcubismframework.js"></script>

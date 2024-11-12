@@ -41,25 +41,28 @@ def get_ip_addresses():
         return []
 
 while True:
-    # 获取IP地址列表
-    ip_addresses = get_ip_addresses()
-    proxies = ''
-    proxy_groups = ''
-    index = 0
-    for ip in ip_addresses:
-        print('  - {"name": "' + str(index) + '#' + ip["region"].replace(' ', '_') + '", "type": "http", "server": "' + ip["proxy"].split(':')[0] + '", "port":' + ip["proxy"].split(':')[1] + ', "skip-cert-verify": true}')
-        proxy_groups += "    - '" + str(index) + '#' + ip["region"].replace(' ', '_') + "'\n"
-        proxies += '  - {"name": "' + str(index) + '#' + ip["region"].replace(' ', '_') + '", "type": "http", "server": "' + ip["proxy"].split(':')[0] + '", "port":' + ip["proxy"].split(':')[1] + ', "skip-cert-verify": true}\n'
-        index += 1
-    
-    
-    with open('test.yaml', 'r', encoding='utf-8') as file:
-        content = file.read()
-    
-    filled_content = content.replace('{local_time}', datetime.now().strftime("%Y-%m-%d %H:%M:%S")).replace('{proxy}', proxies).replace('{proxy_group}', proxy_groups)
-    
-    with open('http_proxy.yaml', 'w', encoding='utf-8') as file:
-        file.write(filled_content)
-    
-    time.sleep(300)
+    try:
+        # 获取IP地址列表
+        ip_addresses = get_ip_addresses()
+        proxies = ''
+        proxy_groups = ''
+        index = 0
+        for ip in ip_addresses:
+            print('  - {"name": "' + str(index) + '#' + ip["region"].replace(' ', '_') + '", "type": "http", "server": "' + ip["proxy"].split(':')[0] + '", "port":' + ip["proxy"].split(':')[1] + ', "skip-cert-verify": true}')
+            proxy_groups += "    - '" + str(index) + '#' + ip["region"].replace(' ', '_') + "'\n"
+            proxies += '  - {"name": "' + str(index) + '#' + ip["region"].replace(' ', '_') + '", "type": "http", "server": "' + ip["proxy"].split(':')[0] + '", "port":' + ip["proxy"].split(':')[1] + ', "skip-cert-verify": true}\n'
+            index += 1
+        
+        
+        with open('test.yaml', 'r', encoding='utf-8') as file:
+            content = file.read()
+        
+        filled_content = content.replace('{local_time}', datetime.now().strftime("%Y-%m-%d %H:%M:%S")).replace('{proxy}', proxies).replace('{proxy_group}', proxy_groups)
+        
+        with open('http_proxy.yaml', 'w', encoding='utf-8') as file:
+            file.write(filled_content)
+        
+        time.sleep(300)
+    except:
+        time.sleep(20)
     

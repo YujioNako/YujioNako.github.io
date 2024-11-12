@@ -3,10 +3,10 @@ import json
 import datetime
 import time
 import traceback
-import mysql.connector
+import mysql.connector as connector
 
 base_url = "https://app.bupt.edu.cn/buptdf/wap/default/search"
-cookies = {'eai-sess': 'm5eftv45f93kng7r2hs04th4v0'}
+cookies = {'eai-sess': '61poeb38n7qrb4a12011h171n6'}
 mail_url = "https://pro-ivan.com/api/e-mail/"
 
 
@@ -113,8 +113,8 @@ def read():
 
 def read_sql():
     # 连接MySQL数据库
-    cnx = mysql.connector.connect(user='root', password='Ldc123456',
-                                  host='localhost', database='elec_monitor')
+    cnx = connector.connect(user='yujionako', password='Ldc123456',
+                                  host='proivan-mssql.mysql.database.azure.com', database='elec_monitor')
     cursor = cnx.cursor()
 
     # 执行SELECT语句查询数据
@@ -149,7 +149,7 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
 
-    if hour == 15:
+    if hour == 11:
         # 开始一个新循环
         try:
             read_sql()

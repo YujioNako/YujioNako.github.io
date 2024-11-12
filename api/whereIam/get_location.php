@@ -10,9 +10,23 @@ if (!$startTime || !$endTime) {
     exit;
 }
 
+//将输入时间从 UTC+8 转换为 UTC+0
+try {
+    $startDateTime = new DateTime($startTime, new DateTimeZone('Asia/Shanghai'));
+    $startDateTime->setTimezone(new DateTimeZone('UTC'));
+    $startTimeUtc = $startDateTime->format('Y-m-d H:i:s');
+
+    $endDateTime = new DateTime($endTime, new DateTimeZone('Asia/Shanghai'));
+    $endDateTime->setTimezone(new DateTimeZone('UTC'));
+    $endTimeUtc = $endDateTime->format('Y-m-d H:i:s');
+} catch (Exception $e) {
+    echo json_encode(["error" => "Invalid date format"]);
+    exit;
+}
+
 // 数据库连接信息
-$servername = "localhost";
-$username = "root";
+$servername = "proivan-mssql.mysql.database.azure.com";
+$username = "yujionako";
 $password = "Ldc123456";
 $dbname = "whereIam";
 
@@ -35,6 +49,10 @@ $result = $sql->get_result();
 // 获取结果并转换为JSON格式
 $data = [];
 while ($row = $result->fetch_assoc()) {
+    // 将数据库中的时间从 UTC+0 转换为 UTC+8
+    $dbDateTime = new DateTime($row['time'], new DateTimeZone('UTC'));
+    $dbDateTime->setTimezone(new DateTimeZone('Asia/Shanghai'));
+    $row['time'] = $dbDateTime->format('Y-m-d H:i:s');
     $data[] = $row;
 }
 

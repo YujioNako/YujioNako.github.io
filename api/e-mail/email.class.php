@@ -2,34 +2,33 @@
 class smtp
 {
   /* Public Variables */
-  var $smtp_port; //smtp_port 端口号
+  var $smtp_port;
   var $time_out;
-  var $host_name; //服务器主机名
+  var $host_name;
   var $log_file;
-  var $relay_host; //服务器主机地址
+  var $relay_host;
   var $debug;
-  var $auth; //验证
-  var $user; //服务器用户名
-  var $pass; //服务器密码
+  var $auth;
+  var $user;
+  var $pass;
   /* Private Variables */
   var $sock;
-  /* Constractor 构造方法*/
-  function smtp($relay_host = "", $smtp_port = 25, $auth = false, $user, $pass)
+
+  /* Constructor */
+  function __construct($relay_host = "", $smtp_port = 25, $auth = false, $user, $pass)
   {
     $this->debug   = FALSE;
     $this->smtp_port = $smtp_port;
     $this->relay_host = $relay_host;
-    $this->time_out  = 30; //is used in fsockopen()
-    #
-    $this->auth    = $auth; //auth
+    $this->time_out  = 30;
+    $this->auth    = $auth;
     $this->user    = $user;
     $this->pass    = $pass;
-    #
-    $this->host_name = "localhost"; //is used in HELO command
-    // $this->host_name = "smtp.163.com"; //is used in HELO command
+    $this->host_name = "localhost";
     $this->log_file  = "";
     $this->sock = FALSE;
   }
+
   /* Main Function */
   function sendmail($to, $from, $subject = "", $body = "", $mailtype, $cc = "", $bcc = "", $additional_headers = "")
   {
@@ -37,8 +36,7 @@ class smtp
     $mail_from = $this->get_address($this->strip_comment($from));
     $body   = mb_ereg_replace("(^|(\r\n))(\\.)", "\\1.\\3", $body);
     $header .= "MIME-Version:1.0\r\n";
-    if ($mailtype == "HTML") { //邮件发送类型
-      //$header .= "Content-Type:text/html\r\n";
+    if ($mailtype == "HTML") {
       $header .= 'Content-type: text/html; charset=utf-8' . "\r\n";
     }
     $header .= "To: " . $to . "\r\n";
@@ -46,7 +44,6 @@ class smtp
       $header .= "Cc: " . $cc . "\r\n";
     }
     $header .= "From: " . $from . "\r\n";
-    // $header .= "From: $from<".$from.">\r\n";  //这里只显示邮箱地址，不够人性化
     $header .= "Subject: " . $subject . "\r\n";
     $header .= $additional_headers;
     $header .= "Date: " . date("r") . "\r\n";
@@ -55,7 +52,7 @@ class smtp
     $header .= "Message-ID: <" . date("YmdHis", $sec) . "." . ($msec * 1000000) . "." . $mail_from . ">\r\n";
     $TO = explode(",", $this->strip_comment($to));
     if ($cc != "") {
-      $TO = array_merge($TO, explode(",", $this->strip_comment($cc))); //合并一个或多个数组
+      $TO = array_merge($TO, explode(",", $this->strip_comment($cc)));
     }
     if ($bcc != "") {
       $TO = array_merge($TO, explode(",", $this->strip_comment($bcc)));
@@ -78,16 +75,15 @@ class smtp
       $this->log_write("Disconnected from remote host\n");
     }
     echo "<br>";
-    //echo $header;
     return $sent;
   }
+
   /* Private Functions */
   function smtp_send($helo, $from, $to, $header, $body = "")
   {
     if (!$this->smtp_putcmd("HELO", $helo)) {
       return $this->smtp_error("sending HELO command");
     }
-    #auth
     if ($this->auth) {
       if (!$this->smtp_putcmd("AUTH LOGIN", base64_encode($this->user))) {
         return $this->smtp_error("sending HELO command");
@@ -96,7 +92,6 @@ class smtp
         return $this->smtp_error("sending HELO command");
       }
     }
-    #
     if (!$this->smtp_putcmd("MAIL", "FROM:<" . $from . ">")) {
       return $this->smtp_error("sending MAIL FROM command");
     }
@@ -117,6 +112,7 @@ class smtp
     }
     return TRUE;
   }
+
   function smtp_sockopen($address)
   {
     if ($this->relay_host == "") {
@@ -125,22 +121,23 @@ class smtp
       return $this->smtp_sockopen_relay();
     }
   }
+
   function smtp_sockopen_relay()
   {
     $this->log_write("Trying to " . $this->relay_host . ":" . $this->smtp_port . "\n");
     $this->sock = @fsockopen($this->relay_host, $this->smtp_port, $errno, $errstr, $this->time_out);
     if (!($this->sock && $this->smtp_ok())) {
-      $this->log_write("Error: Cannot connenct to relay host " . $this->relay_host . "\n");
+      $this->log_write("Error: Cannot connect to relay host " . $this->relay_host . "\n");
       $this->log_write("Error: " . $errstr . " (" . $errno . ")\n");
       return FALSE;
     }
     $this->log_write("Connected to relay host " . $this->relay_host . "\n");
     return TRUE;
-    ;
   }
+
   function smtp_sockopen_mx($address)
   {
-    $domain = ereg_replace("^.+@([^@]+)$", "\\1", $address);
+    $domain = preg_replace("/^.+@([^@]+)$/", "\\1", $address);
     if (!@getmxrr($domain, $MXHOSTS)) {
       $this->log_write("Error: Cannot resolve MX \"" . $domain . "\"\n");
       return FALSE;
@@ -159,23 +156,26 @@ class smtp
     $this->log_write("Error: Cannot connect to any mx hosts (" . implode(", ", $MXHOSTS) . ")\n");
     return FALSE;
   }
+
   function smtp_message($header, $body)
   {
     fputs($this->sock, $header . "\r\n" . $body);
     $this->smtp_debug("> " . str_replace("\r\n", "\n" . "> ", $header . "\n> " . $body . "\n> "));
     return TRUE;
   }
+
   function smtp_eom()
   {
     fputs($this->sock, "\r\n.\r\n");
     $this->smtp_debug(". [EOM]\n");
     return $this->smtp_ok();
   }
+
   function smtp_ok()
   {
     $response = str_replace("\r\n", "", fgets($this->sock, 512));
     $this->smtp_debug($response . "\n");
-    if (!mb_ereg("^[23]", $response)) {
+    if (!preg_match("/^[23]/", $response)) {
       fputs($this->sock, "QUIT\r\n");
       fgets($this->sock, 512);
       $this->log_write("Error: Remote host returned \"" . $response . "\"\n");
@@ -183,6 +183,7 @@ class smtp
     }
     return TRUE;
   }
+
   function smtp_putcmd($cmd, $arg = "")
   {
     if ($arg != "") {
@@ -195,11 +196,13 @@ class smtp
     $this->smtp_debug("> " . $cmd . "\n");
     return $this->smtp_ok();
   }
+
   function smtp_error($string)
   {
     $this->log_write("Error: Error occurred while " . $string . ".\n");
     return FALSE;
   }
+
   function log_write($message)
   {
     $this->smtp_debug($message);
@@ -216,6 +219,7 @@ class smtp
     fclose($fp);
     return TRUE;
   }
+
   function strip_comment($address)
   {
     $comment = "\\([^()]*\\)";
@@ -224,19 +228,22 @@ class smtp
     }
     return $address;
   }
+
   function get_address($address)
   {
     $address = mb_ereg_replace("([ \t\r\n])+", "", $address);
     $address = mb_ereg_replace("^.*<(.+)>.*$", "\\1", $address);
     return $address;
   }
+
   function smtp_debug($message)
   {
     if ($this->debug) {
       echo $message . "<br>";
     }
   }
-  function get_attach_type($image_tag) //
+
+  function get_attach_type($image_tag)
   {
     $filedata = array();
     $img_file_con = fopen($image_tag, "r");
@@ -246,7 +253,7 @@ class smtp
     fclose($img_file_con);
     $filedata['context'] = $image_data;
     $filedata['filename'] = basename($image_tag);
-    $extension      = substr($image_tag, strrpos($image_tag, "."), strlen($image_tag) - strrpos($image_tag, "."));
+    $extension = substr($image_tag, strrpos($image_tag, "."), strlen($image_tag) - strrpos($image_tag, "."));
     switch ($extension) {
       case ".gif":
         $filedata['type'] = "image/gif";
@@ -255,8 +262,6 @@ class smtp
         $filedata['type'] = "application/x-gzip";
         break;
       case ".htm":
-        $filedata['type'] = "text/html";
-        break;
       case ".html":
         $filedata['type'] = "text/html";
         break;

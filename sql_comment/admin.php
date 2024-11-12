@@ -95,8 +95,8 @@ else{
 if(!isset($_SESSION['comment_auth'])||$_SESSION['comment_auth']!==true) exit('未登录，请登陆后再操作！');
 if(!isset($_POST["id"])) exit('请在输入后提交');
 // 连接数据库
-$servername = "127.0.0.1";
-$username = "root";
+$servername = "proivan-mssql.mysql.database.azure.com";
+$username = "yujionako";
 $password = "Ldc123456";
 $dbname = "messages";
 

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Calculation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #pi-display {
+            font-size: 24px;
+            width: 100%; /* 或者指定一个具体的宽度 */
+            word-wrap: break-word; /* 自动换行 */
+            word-break: break-all; /* 确保任何字符都能换行 */
+            white-space: normal; /* 允许正常的空白处理 */
+        }
+        #chart-container {
+            width: 80%;
+            height: 400px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>圆周率计算</h1>
+    <div id="decimalPlace-display">已计算位数：0</div>
+    <div id="rate-display">计算速度：0ms/位</div>
+    <label for="precision">精度：</label>
+    <input id="precision" type="number" value="50000">
+    <button id="start-button">开始计算</button>
+    <div id="chart-container">
+        <canvas id="speed-chart"></canvas>
+    </div>
+    <div id="pi-display">3.</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.3.1/decimal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+document.getElementById('start-button').addEventListener('click', function(){BBPcalculatePi(document.getElementById('precision').value);});
+
+function calculatePi() {
+    let pi = 0;
+    let i = 0;
+    const display = document.getElementById('pi-display');
+    const times = [];
+    const iterations = [];
+
+    const ctx = document.getElementById('speed-chart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: iterations,
+            datasets: [{
+                label: '计算时间 (ms)',
+                data: times,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            animation: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '迭代次数'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '时间 (ms)'
+                    }
+                }
+            }
+        }
+    });
+
+    function step() {
+        const startTime = performance.now();
+        pi += (4 * Math.pow(-1, i)) / (2 * i + 1);
+        i++;
+        const endTime = performance.now();
+
+        const timeTaken = endTime - startTime;
+        times.push(timeTaken);
+        iterations.push(n);
+
+        chart.update();
+
+        // 将 pi 转换为字符串并截取所需的位数
+        const piString = pi.toString().substring(0, i + 2); // 包括 "3."
+
+        // 更新显示内容
+        display.textContent = piString;
+
+        // 每次计算一位后暂停50毫秒，演示逐步计算
+        if (i > -1) { // 可以设置更大的值来计算更多位
+            setTimeout(step, 0);
+            if (i % 1000 === 0) {
+                console.log(i);
+            }
+        }
+    }
+
+    step();
+}
+
+function BBPcalculatePi(precision) {
+    Decimal.set({ precision: parseInt(precision) }); // 设置精度为 100 位
+    let pi = new Decimal(0);
+    let n = 0;
+    const display = document.getElementById('pi-display');
+    const decimalPlace = document.getElementById('decimalPlace-display');
+    const rate = document.getElementById('rate-display');
+    const times = [];
+    const iterations = [];
+
+    const ctx = document.getElementById('speed-chart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: iterations,
+            datasets: [{
+                label: '计算时间 (ms)',
+                data: times,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '迭代次数'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '时间 (ms)'
+                    }
+                }
+            }
+        }
+    });
+
+    function bbpFormula(n) {
+        const sixteenPowN = Decimal.pow(16, n);
+        return new Decimal(1).dividedBy(sixteenPowN).times(
+            new Decimal(4).dividedBy(8 * n + 1)
+            .minus(new Decimal(2).dividedBy(8 * n + 4))
+            .minus(new Decimal(1).dividedBy(8 * n + 5))
+            .minus(new Decimal(1).dividedBy(8 * n + 6))
+        );
+    }
+
+    function step() {
+        const startTime = performance.now();
+        const term = bbpFormula(n);
+        pi = pi.plus(term);
+        n++;
+        const endTime = performance.now();
+
+        const timeTaken = endTime - startTime;
+
+        // 将 pi 转换为字符串并显示
+        const piString = pi.toString().substring(0, n+2);
+
+        // 更新显示内容
+        display.textContent = piString;
+        decimalPlace.textContent = '已计算位数：' + n;
+
+        // 每次计算一位后暂停100毫秒，演示逐步计算
+        if (n < precision) { // 可以设置更大的值来计算更多位
+            setTimeout(step, 0);
+            if (n % 100 === 1) {
+                rate.textContent = '计算速度：' + timeTaken.toFixed(1) + 'ms/位';
+                times.push(timeTaken);
+                iterations.push(n);
+        
+                chart.update();
+            }
+        }
+    }
+
+    step();
+}
+
+    </script>
+</body>
+</html>

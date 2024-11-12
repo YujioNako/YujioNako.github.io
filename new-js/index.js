@@ -170,7 +170,7 @@ document.onkeydown = function() {
         return false;
     }
      if ((e.ctrlKey) && (e.keyCode == 83)) { //ctrl+s
-        alert("你存个html文件不怕我往里面藏病毒吗(恼)");
+        alert("你存个html文件不怕我往里面藏毒吗(恼)");
         return false;
     }
      if ((e.ctrlKey) && (e.keyCode == 85)) { //ctrl+s
@@ -445,7 +445,9 @@ setTimeout(function() {
 
 
 console.log(`
-index.js LOADED
+  赛博邪祟  知虫之名
+  急需DE去  不得久停
+☯ - 急 急 如 律 令 - ☯
 
       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  
        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  

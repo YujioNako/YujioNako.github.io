@@ -1578,3 +1578,97 @@ b.send(JSON.stringify(a));c.classList.add("feedback-hidden");d.classList.remove(
 已完成任务：将 BUPT电费低警告--截至Null您宿舍(编号: 29201)的电费仅剩Null元，已小于15元。为了防止断电给您造成损失，请及时充值！ 发送到 2212708123@qq.com
 已完成任务：将 新留言通报(妮露狐粉丝站)--<b><font size=2.5>User_Name itsuki (Contact )</font></b><br><br><b>Comment</b><font size=2 style='margin-left:10px;'><pre>└Just wanted to say I really love her voice! So smoothing :)</pre></font><br><br><font size=1.5 color=#808080>  Time.   2024-08-31 20:17:35(UTC+8)<br>from 0(14.100.18.128)<br>In page https://www.sweetily.club/<br>end.</font> 发送到 2531667489@qq.com
 已完成任务：将 新留言通报(momo粉丝站)--<b><font size=2.5>User_Name </font></b><br><br><b>Comment</b><font size=2 style='margin-left:10px;'><pre>└</pre></font><br><br><font size=1.5 color=#808080><br>In page <br>end.</font> 发送到 2531667489@qq.com
+已完成任务：将 Hello, 世界！--智慧制造，扬帆中国 发送到 2531667489@qq.com
+已完成任务：将 电费监视系统异常--总循环出现错误：<pre>Traceback (most recent call last):
+  File "/usr/local/python3/lib/python3.8/site-packages/urllib3/connectionpool.py", line 700, in urlopen
+    self._prepare_proxy(conn)
+  File "/usr/local/python3/lib/python3.8/site-packages/urllib3/connectionpool.py", line 996, in _prepare_proxy
+    conn.connect()
+  File "/usr/local/python3/lib/python3.8/site-packages/urllib3/connection.py", line 369, in connect
+    self._tunnel()
+  File "/usr/local/python3/lib/python3.8/http/client.py", line 898, in _tunnel
+    raise OSError("Tunnel connection failed: %d %s" % (code,
+OSError: Tunnel connection failed: 403 Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/adapters.py", line 440, in send
+    resp = conn.urlopen(
+  File "/usr/local/python3/lib/python3.8/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    retries = retries.increment(
+  File "/usr/local/python3/lib/python3.8/site-packages/urllib3/util/retry.py", line 592, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='app.bupt.edu.cn', port=443): Max retries exceeded with url: /buptdf/wap/default/search (Caused by ProxyError('Cannot connect to proxy.', OSError('Tunnel connection failed: 403 Forbidden')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 40, in monitor
+    response = requests.post(base_url, data=post_data, cookies=cookies, proxies={"https": "http://{}".format(proxy)}, timeout=5)
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/api.py", line 117, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/sessions.py", line 529, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/sessions.py", line 645, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/local/python3/lib/python3.8/site-packages/requests/adapters.py", line 513, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPSConnectionPool(host='app.bupt.edu.cn', port=443): Max retries exceeded with url: /buptdf/wap/default/search (Caused by ProxyError('Cannot connect to proxy.', OSError('Tunnel connection failed: 403 Forbidden')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 129, in read_sql
+    monitor(dromNumber, mailto)
+  File "elec_monitor_proxy.py", line 66, in monitor
+    monitor(drom_Number, mailto, proxy)
+  File "elec_monitor_proxy.py", line 66, in monitor
+    monitor(drom_Number, mailto, proxy)
+  File "elec_monitor_proxy.py", line 66, in monitor
+    monitor(drom_Number, mailto, proxy)
+  [Previous line repeated 1 more time]
+  File "elec_monitor_proxy.py", line 50, in monitor
+    time.sleep(2)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 155, in <module>
+    read_sql()
+  File "elec_monitor_proxy.py", line 140, in read_sql
+    time.sleep(5)
+KeyboardInterrupt
+</pre> 发送到 2531667489@qq.com
+已完成任务：将 电费监视系统异常--总循环出现错误：<pre>Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 45, in monitor
+    data = json.loads(response.text)
+  File "/usr/local/python3/lib/python3.8/json/__init__.py", line 357, in loads
+    return _default_decoder.decode(s)
+  File "/usr/local/python3/lib/python3.8/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/local/python3/lib/python3.8/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 129, in read_sql
+    monitor(dromNumber, mailto)
+  File "elec_monitor_proxy.py", line 50, in monitor
+    time.sleep(2)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "elec_monitor_proxy.py", line 155, in <module>
+    read_sql()
+  File "elec_monitor_proxy.py", line 140, in read_sql
+    time.sleep(5)
+KeyboardInterrupt
+</pre> 发送到 2531667489@qq.com
