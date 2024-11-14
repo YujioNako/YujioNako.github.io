@@ -1,28 +1,22 @@
 #!/bin/bash
 
-# 检查参数数量
-if [ "$#" -lt 2 ]; then
-    echo "Usage: \$0 <search_text> <directory> <replace_text (optional)>"
-    exit 1
-fi
+# 设置网站根目录和域名
+root_dir="/www/wwwroot/pro-ivan.cn/"
+domain="http://pro-ivan.com/"
 
-# 获取参数
-SEARCH_TEXT=\$1
-DIRECTORY=${2:-.}
-REPLACE_TEXT=\$3
+# 创建 sitemap.xml 文件
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > sitemap.xml
+echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">" >> sitemap.xml
 
-# 查找并列出包含搜索文本的文件
-find "$DIRECTORY" -type f \
-  ! -path "*/.git/*" \
-  ! -path "*/.gitignore" \
-  ! -path "*/node_modules/*" \
-  ! -path "*/.DS_Store" \
-  -exec grep -Il "$SEARCH_TEXT" {} \; |
-while read -r file; do
-    echo "Found in: $file"
-    if [ -n "$REPLACE_TEXT" ]; then
-        # 使用 sed 替换文本
-        #sed -i "s/$SEARCH_TEXT/$REPLACE_TEXT/g" "$file"
-        echo "Replaced text in: $file"
-    fi
+# 遍历所有 HTML 和 PHP 文件
+find "$root_dir" \( -name "*.html" -o -name "*.php" \) | while read file; do
+  # 获取相对路径并转换为 URL
+  url="${file#$root_dir}"
+  echo "  <url>" >> sitemap.xml
+  echo "    <loc>$domain$url</loc>" >> sitemap.xml
+  echo "  </url>" >> sitemap.xml
 done
+
+echo "</urlset>" >> sitemap.xml
+
+echo "Sitemap generated at sitemap.xml"

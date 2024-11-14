@@ -12,6 +12,16 @@
 		<title>Pro-Ivan数字库-图床</title>
 		<meta name="keywords" content="动漫图片,动漫资讯,动漫,二次元,漫画,动画,游戏,Cosplay,ACG,番剧,视频分享,壁纸,神曲,热门动漫,热门番剧">
 		<meta name="description" content="技术宅社团，什么活都整！">
+		<style>
+            #upload_btn {
+                transition: opacity 0.3s ease, pointer-events 0.3s ease;
+            }
+            
+            #upload_btn.disabled {
+                pointer-events: none; /* 禁止用户交互 */
+                opacity: 0.5; /* 降低透明度，显示禁用状态 */
+            }
+		</style>
 		<script type="text/javascript">
             function AddFavorite(url,title){
              var ua = navigator.userAgent.toLowerCase();
@@ -158,7 +168,7 @@
             <h4>Powered by <a href="https://space.bilibili.com/263777724" target="_blank">bili_263777724</a></h4>
             <p>注意!目前只支持上传jpg，jpeg，png与部分gif！<br>另外，请不要滥用图床，本图床只供分享b站无法通过审核的图片!<br>否则我们有可能永久拒绝您的访问！</p>
             
-            <form id="upload_form" action="/upload_pic/res/new-upload_pic.php" method="post" enctype="multipart/form-data">
+            <form id="upload_form" enctype="multipart/form-data">
                 <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class='mdui-textfield-label'>图源平台(选填)</label>
                 <input type='text' class='mdui-textfield-input' name='platform'  maxlength='50' style='width:98%;'>
@@ -169,19 +179,57 @@
                 </div>
                 <center>
                 <input type="hidden" name="<?php echo ini_get('session.upload_progress.name'); ?>" value="test">
-                <input type="file" name="file" id="file" onchange="preImg(this.id,'photo');showProgress();" style="display:none;">
-                <input class="mdui-btn mdui-ripple mdui-btn-raised mdui-btn-dense mdui-color-theme" type="button" onclick="document.getElementById('file').click();" value="选择文件">
-                <input class="mdui-btn mdui-ripple mdui-btn-raised mdui-btn-dense mdui-color-theme" name="uploadfile" type="submit" value="上传文件" onclick="startProgress()" style="margin-left:15px;">
+                <input type="file" name="file" id="file" onchange="preImg(this.id,'photo');" style="display:none;">
+                <input id="select_btn" class="mdui-btn mdui-ripple mdui-btn-raised mdui-btn-dense mdui-color-theme" type="button" onclick="document.getElementById('file').click();" value="选择文件">
+                <input id="upload_btn" class="mdui-btn mdui-ripple mdui-btn-raised mdui-btn-dense mdui-color-theme" name="uploadfile" type="submit" value="上传文件" onclick="" style="margin-left:15px;">
                 <i id="file_status" class="mdui-icon material-icons" style="visibility: hidden; color: green;">check</i><br>
                 </center>
                 <center>
                 <br><br><hr><br>
-                <img id="photo" src="" width="60%" max-height=70% style="display: block;" /><br>
+                <img id="photo" src="" max-width="60%" style="display: block;max-height: 250px;" /><br>
                 <div id="mdui-progress" class="mdui-progress" style="display:none;">
                     <div id="bar" class="mdui-progress-determinate" style="width:0%;"></div>
                 </div>
                 </center>
             </form>
+            <center>
+                <div id="upload_result"></div>
+                <script>
+                    document.getElementById('upload_form').addEventListener('submit', function(event) {
+                        event.preventDefault(); // 阻止表单的默认提交行为
+                        document.getElementById('upload_btn').classList.add('disabled');
+                        document.getElementById('select_btn').classList.add('disabled');
+                        document.getElementById('upload_btn').value = '上传中';
+            
+                        // 获取表单数据
+                        const formData = new FormData(this);
+            
+                        // 使用Fetch API发送AJAX请求
+                        fetch('/upload_pic/res/new-upload_pic.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            // 将返回的HTML插入到页面的特定位置
+                            document.getElementById('upload_result').innerHTML = html;
+                            var form = document.getElementById('upload_form');
+                            if (form) {
+                                var inputs = form.getElementsByTagName('input');
+                                for (var i = 0; i < inputs.length; i++) {
+                                    if (inputs[i].type === 'text') {
+                                        inputs[i].value = '';
+                                    }
+                                }
+                            }
+                            document.getElementById('upload_btn').classList.remove('disabled');
+                            document.getElementById('select_btn').classList.remove('disabled');
+                            document.getElementById('upload_btn').value = '上传文件';
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                </script>
+            </center>
             <center>
             <script src="/jquery-2.2.0.min.js"></script>
             <script type="text/javascript">

@@ -24,7 +24,7 @@
     use Upyun\Config;
 	ini_set ("memory_limit","-1");
 
-	echo '<pre>';
+	//echo '<pre>';
 	//$file=$_FILES['img1'];
 	// print_r($file);
 
@@ -32,14 +32,14 @@
 	$img=$_FILES['file'];
 	$platform=$_POST['platform'];
 	$author=$_POST['author'];
-	print_r($img);
+	//print_r($img);
 	// die();
 	$dir  = '../';
 	if ($img['type'] != "image/jpg" && $img['type'] != "image/jpeg" && $img['type'] != "image/png" && $img['type'] != "image/gif" && $img['type'] != "image/svg+xml") {
-      //9、输出：失败
-      echo '失败--类型不符，仅允许上传jpg，jpeg，png，gif，svg';
-      header("refresh:3;url=/new-upload.html");
-      print('<br>正在返回上传页面<br>三秒后自动跳转...');
+      //9、输出：<b>失败</b>
+      echo '<b>失败</b>--类型不符，仅允许上传jpg，jpeg，png，gif，svg';
+      //header("refresh:3;url=/new-upload.html");
+      //print('<br>正在返回上传页面<br>三秒后自动跳转...');
       die();
     }
     
@@ -100,51 +100,51 @@
                     // 上传文件
                     $res = $client->write($path.$newname, $file);
                     // 打印上传结果
-                    print_r($res);
+                    //print_r($res);
                     unlink($source);
     			}
     			catch(Exception $e) {
     			    unlink($source);
     			    echo '<br><hr><br>';
-        			echo '失败--上传失败，请联系管理员<br>code:';
+        			echo '<b>失败</b>--上传失败，请联系管理员<br>code:';
                     echo $e->getCode();
                     echo " ".$e->getMessage();
-        			header("refresh:10;url=/new-upload.html");
-                    exit('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
+        			//header("refresh:10;url=/new-upload.html");
+                    //exit('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
                 }
                 echo '<br><hr><br>';
-    			echo '上传成功至<a href="//us.pro-ivan.com';
+    			echo '<b>成功</b>--上传成功至<a href="//us.pro-ivan.com';
                 echo $path.$newname;
                 echo '" target="_blank">此处</a><br>要获取短链请点击<a href="http://s.pro-ivan.com/?u=https://us.pro-ivan.com'.$path.$newname.'">此处</a>';
-    			header("refresh:10;url=/new-upload.html");
-                print('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
+    			//header("refresh:10;url=/new-upload.html");
+                //print('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
 		    }
 			catch(Exception $e){
 			    echo '<br><hr><br>';
-    			echo '失败--压缩出错，您上传的可能不是可打开的图片';
-    			header("refresh:10;url=/new-upload.html");
-                print('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
+    			echo '<b>失败</b>--压缩出错，您上传的可能不是可打开的图片';
+    			//header("refresh:10;url=/new-upload.html");
+                //print('<br>正在返回<a href="/new-upload.html">上传页面</a><br>10秒后自动跳转...');
 			}
 		}else{
 		    echo '<br><hr><br>';
-			echo "<script type='text/javascript'>alert('失败--类型不符，仅允许上传jpg，jpeg，png，gif');location.href=document.referrer;</script>";
-			header("refresh:3;url=/new-upload.html");
-            print('<br>正在返回上传页面<br>三秒后自动跳转...');
+			echo "<b>失败</b>--类型不符，仅允许上传jpg，jpeg，png，gif')<script type='text/javascript'>alert('location.href=document.referrer;</script>";
+			//header("refresh:3;url=/new-upload.html");
+            //print('<br>正在返回上传页面<br>三秒后自动跳转...');
 			return false;
 		}
 	}else{
 	    echo '<br><hr><br>';
-		echo "失败--文件名为空";
-		header("refresh:3;url=/new-upload.html");
-        print('<br>正在返回上传页面<br>三秒后自动跳转...');
+		echo "<b>失败</b>--文件名为空";
+		//header("refresh:3;url=/new-upload.html");
+        //print('<br>正在返回上传页面<br>三秒后自动跳转...');
 	}
     }
     else{
-        die();
         echo '<br><hr><br>';
-    	echo "失败--含有黑名单内内容";
-    	header("refresh:3;url=/new-upload.html");
-        print('<br>正在返回上传页面<br>三秒后自动跳转...');
+    	echo "<b>失败</b>--含有黑名单内内容";
+    	//header("refresh:3;url=/new-upload.html");
+        //print('<br>正在返回上传页面<br>三秒后自动跳转...');
+        die();
     }
 	
 ?>
